@@ -50,8 +50,9 @@ public class vigenereCipher {
 		maximum = getMax(sortedMap2);
 		System.out.println("\nMost frequent trigram :" + maximum);
 		getKeyLength(maximum, x);
-		breakText(x);
+		breakText(x,0,"");
 		String decrypted = (decrypt(x, KEY));
+		System.out.println("\nDecryption Key : "+KEY);
 		System.out.println(decrypted);
 		
 		getFileIn("ncl.txt");
@@ -273,84 +274,30 @@ public class vigenereCipher {
 
 	}
 
-	public static String breakText(String s) throws IOException{
+	public static String breakText(String s, int count, String key) throws IOException{
 		
 		char[] stuff = s.toCharArray();  
-		String a1 = "",b1 = "",c1 = "",d1 = "",e1 = "";
-
+		String a1 = "";
+		char m = 0;
+		int counter = count;
+		KEY = key;
+		
 		LinkedHashMap<String, Double> a =  new LinkedHashMap<String, Double>();
-		LinkedHashMap<String, Double> b =  new LinkedHashMap<String, Double>();	
-		LinkedHashMap<String, Double> c =  new LinkedHashMap<String, Double>();
-		LinkedHashMap<String, Double> d =  new LinkedHashMap<String, Double>();
-		LinkedHashMap<String, Double> e =  new LinkedHashMap<String, Double>();
-
-		int counter = 1;
-		for (int i = 0; i < stuff.length; i++) {
-			if (counter == 1) {
-				//a.add(stuff[i]); 
-				a1 += stuff[i];
-				counter++;
-				continue;
-			}
-			if (counter == 2) {
-				//b.add(stuff[i]);
-				b1 += stuff[i];
-				counter++;
-				continue;
-			}
-			if (counter == 3) {
-				//c.add(stuff[i]);
-				c1 += stuff[i];
-				counter++; 
-				continue;
-			}
-			if (counter == 4) {
-				//d.add(stuff[i]);
-				d1 += stuff[i];
-				counter++; 
-				continue;
-			}
-			if (counter == 5) {
-				//e.add(stuff[i]);
-				e1 += stuff[i];
-				counter = 1; 
-				continue;
-			}
+		
+		if (counter < keyLength){
+			for (int i = counter; i< stuff.length - keyLength; i += keyLength) {
+				
+					a1 += stuff[i];
+					
+				}
+			counter++;
+			freq(a1,1,a); 
+			m = getMax(a).charAt(0);
+			int f = m - 101 +97;
+			KEY += (char)f;
+			breakText(s, counter, KEY);
 		}
-
-		//assuming the most frequent letter in the alphabet is e or ASCII 101
-		char m;
-		
-		freq(a1,1,a); 
-		m = getMax(a).charAt(0);
-		int f = m - 101 +97;
-		KEY += (char)f;
-		
-		freq(b1,1,b); 
-		m = getMax(b).charAt(0);
-		f = m - 101 +97;
-		KEY += (char)f;
-		
-		freq(c1,1,c); 
-		m = getMax(c).charAt(0);
-		f = m - 101 +97;
-		KEY += (char)f;
-		
-		freq(d1,1,d); 
-		m = getMax(d).charAt(0);
-		f = m - 101 +97;
-		KEY += (char)f;
-		
-		freq(e1,1,e); 
-		m = getMax(e).charAt(0);
-		f = m - 101 +97;
-		KEY += (char)f;
-		
-		
-		System.out.println("\nThe Key is : " +KEY);
-		
 		return KEY;
 	}
-
 
 }
